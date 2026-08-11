@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ट्रक वाला रेडियो</title>
+<link rel="stylesheet" href="style.css" />
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Noto+Sans+Devanagari:wght@500;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <div class="sky">
+    <div class="banner-strip"></div>
+
+    <header class="topbar">
+      <span id="clock">--:--</span>
+      <div class="live-count">
+        <span class="dot"></span>
+        <span id="userCount">–</span> ऑनलाइन
+      </div>
+    </header>
+
+    <main class="hero">
+      <h1 class="title">ट्रक वाला</h1>
+      <p class="quote" id="quote">हॉर्न ओके प्लीज़</p>
+      <p class="quote-sub">भर के चले, फिर भी एक दिन खाली हाथ ही जाना है।</p>
+    </main>
+
+    <div class="truck-silhouette"></div>
+
+    <!-- Tap-to-join button: required because browsers block autoplay with sound -->
+    <button id="joinBtn" class="join-btn">
+      <span class="horn-icon">📯</span> सुनना शुरू करें — Tap to join the radio
+    </button>
+
+    <div id="player" class="hidden-player"></div>
+
+    <footer class="dock" id="dock" hidden>
+      <div class="dock-info">
+        <div class="dock-title">Now playing on the shared radio</div>
+        <div class="dock-sub">Everyone hears this together, live</div>
+      </div>
+      <div class="dock-status">
+        <span class="pulse"></span> LIVE
+      </div>
+    </footer>
+  </div>
+
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <script src="app.js"></script>
+</body>
+</html>
