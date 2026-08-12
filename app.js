@@ -122,6 +122,12 @@ document.getElementById("adminCancelBtn").addEventListener("click", function () 
   adminModal.hidden = true;
 });
 
+adminModal.addEventListener("click", function (e) {
+  if (e.target === adminModal) {
+    adminModal.hidden = true;
+  }
+});
+
 document.getElementById("adminSubmitBtn").addEventListener("click", submitAdminLogin);
 adminPasswordInput.addEventListener("keydown", function (e) {
   if (e.key === "Enter") submitAdminLogin();
