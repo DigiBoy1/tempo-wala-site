@@ -3,45 +3,76 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>ट्रक वाला रेडियो</title>
+<title>MOOD वाला — Nitinsinghverse</title>
 <link rel="stylesheet" href="style.css" />
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Noto+Sans+Devanagari:wght@500;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Dancing+Script:wght@700&family=Baloo+2:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
-  <div class="sky">
-    <div class="banner-strip"></div>
+  <div class="stage">
+
+    <!-- BACKGROUND VIDEO — put your file at frontend/background.mp4 -->
+    <video class="bg-video" autoplay muted loop playsinline>
+      <source src="background.mp4" type="video/mp4">
+    </video>
+    <div class="bg-overlay"></div>
 
     <header class="topbar">
-      <span id="clock">--:--</span>
-      <div class="live-count">
-        <span class="dot"></span>
-        <span id="userCount">–</span> ONLINE
+      <div class="pill clock-pill">
+        <span class="pill-icon">🕐</span>
+        <div>
+          <div class="pill-main" id="clock">--:--</div>
+          <div class="pill-sub" id="dateLine">--</div>
+        </div>
+      </div>
+
+      <div class="pill status-pill">
+        <span class="status-dot"></span>
+        <div>
+          <div class="pill-main online-text">ONLINE</div>
+          <div class="pill-sub"><span id="userCount">–</span> listening now</div>
+        </div>
       </div>
     </header>
 
+    <div class="brandmark">
+      <svg class="brand-orbit" viewBox="0 0 100 40" width="120">
+        <path d="M20 30 A20 20 0 1 1 80 30" fill="none" stroke="currentColor" stroke-width="1.2"/>
+        <circle cx="20" cy="30" r="1.5" fill="currentColor"/>
+        <circle cx="80" cy="30" r="1.5" fill="currentColor"/>
+      </svg>
+      <div class="brand-name">Nitinsinghverse</div>
+    </div>
+
     <main class="hero">
-      <h1 class="title">TEMPO वाला</h1>
-      <p class="quote" id="quote">हॉर्न ओके प्लीज़</p>
-      <p class="quote-sub">भर के चले, फिर भी एक दिन खाली हाथ ही जाना है।</p>
+      <h1 class="title">
+        <span class="title-mood">MOOD</span>
+        <span class="title-wala">वाला</span>
+      </h1>
+      <div class="live-badge">📻 LIVE RADIO</div>
+      <p class="tagline">Feel the vibes. Live the mood.</p>
     </main>
 
-    <div class="truck-silhouette"></div>
-
-    <!-- Tap-to-join button: required because browsers block autoplay with sound -->
-    <button id="joinBtn" class="join-btn">
-      <span class="horn-icon">📯</span> सुनना शुरू करें — Tap to join the radio
-    </button>
+    <button id="joinBtn" class="join-btn">🎵 Tap to join the radio</button>
 
     <div id="player" class="hidden-player"></div>
 
     <footer class="dock" id="dock" hidden>
-      <div class="dock-info">
-        <div class="dock-title">Now playing on the shared radio</div>
-        <div class="dock-sub">Everyone hears this together, live</div>
+      <div class="dock-left">
+        <img id="albumArt" class="album-art" src="" alt="">
+        <div class="dock-info">
+          <div class="dock-label">NOW PLAYING</div>
+          <div class="dock-title" id="songTitle">—</div>
+          <div class="dock-artist" id="songArtist">—</div>
+        </div>
       </div>
-      <div class="dock-status">
-        <span class="pulse"></span> LIVE
+
+      <div class="dock-right">
+        <div class="volume-control">
+          <span class="vol-icon">🔊</span>
+          <input type="range" id="volumeSlider" min="0" max="100" value="80" />
+        </div>
+        <div class="live-tag"><span class="pulse"></span> LIVE</div>
       </div>
     </footer>
   </div>
