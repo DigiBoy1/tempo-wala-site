@@ -94,6 +94,21 @@
       </div>
     </div>
 
+    <!-- Song list for the playlist admin is browsing -->
+    <div id="songListPanel" class="song-list-panel" hidden>
+      <div class="panel-title">Tap a song to play it</div>
+      <div id="songListItems"></div>
+    </div>
+
+    <!-- Admin transport controls -->
+    <div id="adminTransport" class="admin-transport" hidden>
+      <button id="prevBtn">⏮</button>
+      <button id="nextBtn">⏭</button>
+    </div>
+
+    <!-- "Coming up next" banner shown to everyone during the 10s buffer -->
+    <div id="upNextBanner" class="up-next-banner" hidden></div>
+
     <!-- Song request box (visible to everyone, only usable while admin is online) -->
     <div id="requestBox" class="request-box" hidden>
       <input type="text" id="requestInput" placeholder="Request a song…" maxlength="200" />
@@ -107,6 +122,7 @@
           <div class="dock-label">NOW PLAYING</div>
           <div class="dock-title" id="songTitle">—</div>
           <div class="dock-artist" id="songArtist">—</div>
+          <div class="up-next-line" id="upNextLine"></div>
         </div>
       </div>
 

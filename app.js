@@ -29,6 +29,15 @@ socket.on("adminStatus", function (data) {
   document.getElementById("requestBox").hidden = !data.online;
 });
 
+socket.on("upNext", function (data) {
+  var banner = document.getElementById("upNextBanner");
+  banner.textContent = "🎵 Coming up: " + data.title;
+  banner.hidden = false;
+  setTimeout(function () {
+    banner.hidden = true;
+  }, (data.seconds || 10) * 1000);
+});
+
 // --- Sync events (which song is playing right now) ---
 socket.on("sync", function (data) {
   updateNowPlaying(data);
@@ -42,6 +51,23 @@ socket.on("sync", function (data) {
 function applySync(data) {
   player.loadVideoById({ videoId: data.videoId, startSeconds: data.elapsed });
 }
+
+// Continuous drift-correction — no reload, just a quiet seek if this device
+// has fallen out of step with everyone else.
+socket.on("resync", function (data) {
+  if (!player || typeof player.getCurrentTime !== "function") return;
+  try {
+    var current = player.getVideoData();
+    if (!current || current.video_id !== data.videoId) return; // different song, ignore
+    var myTime = player.getCurrentTime();
+    var drift = Math.abs(myTime - data.elapsed);
+    if (drift > 0.6) {
+      player.seekTo(data.elapsed, true);
+    }
+  } catch (e) {
+    // player not ready yet — safe to ignore
+  }
+});
 
 function splitTitle(rawTitle) {
   if (!rawTitle) return { song: "—", artist: "—" };
@@ -57,11 +83,15 @@ function updateNowPlaying(data) {
   var titleEl = document.getElementById("songTitle");
   var artistEl = document.getElementById("songArtist");
   var artEl = document.getElementById("albumArt");
+  var upNextEl = document.getElementById("upNextLine");
 
   if (titleEl) titleEl.textContent = split.song;
   if (artistEl) artistEl.textContent = split.artist;
   if (artEl && data.videoId) {
     artEl.src = "https://img.youtube.com/vi/" + data.videoId + "/hqdefault.jpg";
+  }
+  if (upNextEl) {
+    upNextEl.textContent = data.upNextTitle ? "Up next: " + splitTitle(data.upNextTitle).song : "";
   }
   if (data.title) {
     document.title = data.title + " — Nitinsinghverse";
@@ -145,6 +175,7 @@ socket.on("adminLoginResult", function (res) {
   isAdmin = true;
   adminModal.hidden = true;
   document.getElementById("adminPanel").hidden = false;
+  document.getElementById("adminTransport").hidden = false;
   activePlaylistKey = res.currentPlaylistKey;
   renderPlaylistButtons(res.playlists);
   renderRequests(res.requests);
@@ -154,6 +185,8 @@ socket.on("adminLoginResult", function (res) {
 socket.on("adminDemoted", function () {
   isAdmin = false;
   document.getElementById("adminPanel").hidden = true;
+  document.getElementById("adminTransport").hidden = true;
+  document.getElementById("songListPanel").hidden = true;
 });
 
 function renderPlaylistButtons(playlists) {
@@ -164,14 +197,37 @@ function renderPlaylistButtons(playlists) {
     btn.textContent = p.name;
     if (p.key === activePlaylistKey) btn.classList.add("active");
     btn.addEventListener("click", function () {
-      socket.emit("adminSwitchPlaylist", p.key);
-      activePlaylistKey = p.key;
       Array.from(container.children).forEach(function (b) { b.classList.remove("active"); });
       btn.classList.add("active");
+      socket.emit("adminSwitchPlaylist", p.key); // asks server for this playlist's song list
     });
     container.appendChild(btn);
   });
 }
+
+// Server replies with the song list for whichever playlist admin tapped
+socket.on("playlistSongs", function (data) {
+  var panel = document.getElementById("songListPanel");
+  var list = document.getElementById("songListItems");
+  list.innerHTML = "";
+  data.songs.forEach(function (s) {
+    var item = document.createElement("div");
+    item.className = "song-list-item";
+    item.textContent = splitTitle(s.title).song;
+    item.addEventListener("click", function () {
+      socket.emit("adminPlaySong", { key: data.key, index: s.index });
+    });
+    list.appendChild(item);
+  });
+  panel.hidden = false;
+});
+
+document.getElementById("prevBtn").addEventListener("click", function () {
+  socket.emit("adminPrev");
+});
+document.getElementById("nextBtn").addEventListener("click", function () {
+  socket.emit("adminNext");
+});
 
 document.getElementById("linkPlayBtn").addEventListener("click", function () {
   var input = document.getElementById("linkInput");
