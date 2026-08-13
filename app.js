@@ -6,6 +6,9 @@ var player = null;
 var pendingSync = null;
 var isAdmin = false;
 var activePlaylistKey = null;
+var trackDuration = 0;
+var trackElapsedAtSync = 0;
+var syncReceivedAt = Date.now();
 
 // --- Clock + date ---
 function updateClock() {
@@ -59,6 +62,8 @@ socket.on("resync", function (data) {
   try {
     var current = player.getVideoData();
     if (!current || current.video_id !== data.videoId) return; // different song, ignore
+    trackElapsedAtSync = data.elapsed;
+    syncReceivedAt = Date.now();
     var myTime = player.getCurrentTime();
     var drift = Math.abs(myTime - data.elapsed);
     if (drift > 0.6) {
@@ -96,7 +101,44 @@ function updateNowPlaying(data) {
   if (data.title) {
     document.title = data.title + " — Nitinsinghverse";
   }
+
+  trackDuration = data.duration || 0;
+  trackElapsedAtSync = data.elapsed || 0;
+  syncReceivedAt = Date.now();
 }
+
+function getEstimatedElapsed() {
+  return trackElapsedAtSync + (Date.now() - syncReceivedAt) / 1000;
+}
+
+function formatTime(s) {
+  s = Math.max(0, Math.floor(s));
+  var m = Math.floor(s / 60);
+  var sec = s % 60;
+  return m + ":" + (sec < 10 ? "0" : "") + sec;
+}
+
+function updateProgressBar() {
+  var fill = document.getElementById("progressFill");
+  var timeText = document.getElementById("progressTime");
+  if (!fill || !trackDuration) return;
+  var elapsed = Math.min(getEstimatedElapsed(), trackDuration);
+  var pct = (elapsed / trackDuration) * 100;
+  fill.style.width = pct + "%";
+  if (timeText) timeText.textContent = formatTime(elapsed) + " / " + formatTime(trackDuration);
+}
+setInterval(updateProgressBar, 1000);
+
+// Admin can click/tap anywhere on the timeline to jump there — synced for everyone
+var progressTrack = document.getElementById("progressTrack");
+progressTrack.addEventListener("click", function (e) {
+  if (!isAdmin || !trackDuration) return;
+  var rect = progressTrack.getBoundingClientRect();
+  var pct = (e.clientX - rect.left) / rect.width;
+  pct = Math.min(Math.max(pct, 0), 1);
+  var seekSeconds = Math.floor(pct * trackDuration);
+  socket.emit("adminSeek", seekSeconds);
+});
 
 // --- YouTube IFrame API setup ---
 window.onYouTubeIframeAPIReady = function () {
@@ -176,6 +218,7 @@ socket.on("adminLoginResult", function (res) {
   adminModal.hidden = true;
   document.getElementById("adminPanel").hidden = false;
   document.getElementById("adminTransport").hidden = false;
+  document.getElementById("progressTrack").classList.add("admin-mode");
   activePlaylistKey = res.currentPlaylistKey;
   renderPlaylistButtons(res.playlists);
   renderRequests(res.requests);
@@ -187,6 +230,7 @@ socket.on("adminDemoted", function () {
   document.getElementById("adminPanel").hidden = true;
   document.getElementById("adminTransport").hidden = true;
   document.getElementById("songListPanel").hidden = true;
+  document.getElementById("progressTrack").classList.remove("admin-mode");
 });
 
 function renderPlaylistButtons(playlists) {
@@ -231,10 +275,25 @@ document.getElementById("nextBtn").addEventListener("click", function () {
 
 document.getElementById("linkPlayBtn").addEventListener("click", function () {
   var input = document.getElementById("linkInput");
+  var timeInput = document.getElementById("startTimeInput");
   if (!input.value.trim()) return;
-  socket.emit("adminPlayLink", input.value.trim());
+  var startSeconds = parseTimeToSeconds(timeInput.value.trim());
+  socket.emit("adminPlayLink", { url: input.value.trim(), startSeconds: startSeconds });
   input.value = "";
+  timeInput.value = "";
 });
+
+// Accepts "1:12" (mm:ss) or plain "72" (seconds), returns seconds
+function parseTimeToSeconds(text) {
+  if (!text) return 0;
+  if (text.indexOf(":") !== -1) {
+    var parts = text.split(":");
+    var mins = parseInt(parts[0], 10) || 0;
+    var secs = parseInt(parts[1], 10) || 0;
+    return mins * 60 + secs;
+  }
+  return parseInt(text, 10) || 0;
+}
 
 // --- Requests (admin side) ---
 function renderRequests(requests) {

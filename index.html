@@ -84,6 +84,7 @@
         <div class="admin-label">Play a link (then auto-returns to playlist)</div>
         <div class="link-row">
           <input type="text" id="linkInput" placeholder="Paste YouTube / YT Music link" />
+          <input type="text" id="startTimeInput" placeholder="1:12" class="start-time-input" />
           <button id="linkPlayBtn">Play</button>
         </div>
       </div>
@@ -116,6 +117,10 @@
     </div>
 
     <footer class="dock" id="dock" hidden>
+      <div class="progress-track" id="progressTrack">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="dock-row">
       <div class="dock-left">
         <img id="albumArt" class="album-art" src="" alt="">
         <div class="dock-info">
@@ -127,11 +132,13 @@
       </div>
 
       <div class="dock-right">
+        <span class="progress-time" id="progressTime">0:00 / 0:00</span>
         <div class="volume-control">
           <span class="vol-icon">🔊</span>
           <input type="range" id="volumeSlider" min="0" max="100" value="80" />
         </div>
         <div class="live-tag"><span class="pulse"></span> LIVE</div>
+      </div>
       </div>
     </footer>
   </div>
