@@ -222,6 +222,7 @@ socket.on("adminLoginResult", function (res) {
   activePlaylistKey = res.currentPlaylistKey;
   renderPlaylistButtons(res.playlists);
   renderRequests(res.requests);
+  updateSearchCountLabel(res.searchCount);
 });
 
 // If another device logs in as admin, this device gets demoted back to a normal listener
@@ -272,6 +273,49 @@ document.getElementById("prevBtn").addEventListener("click", function () {
 document.getElementById("nextBtn").addEventListener("click", function () {
   socket.emit("adminNext");
 });
+
+// --- Search any song on YouTube (admin) — live search as you type ---
+var searchDebounceTimer = null;
+document.getElementById("searchBtn").addEventListener("click", runSearch);
+document.getElementById("searchInput").addEventListener("keydown", function (e) {
+  if (e.key === "Enter") runSearch();
+});
+document.getElementById("searchInput").addEventListener("input", function () {
+  clearTimeout(searchDebounceTimer);
+  var value = this.value.trim();
+  if (value.length < 2) return; // wait for at least 2 characters
+  searchDebounceTimer = setTimeout(runSearch, 500); // waits 0.5s after you stop typing
+});
+
+function runSearch() {
+  var input = document.getElementById("searchInput");
+  if (!input.value.trim()) return;
+  socket.emit("adminSearch", input.value.trim());
+}
+
+socket.on("searchResults", function (data) {
+  var container = document.getElementById("searchResults");
+  container.innerHTML = "";
+  data.results.forEach(function (r) {
+    var item = document.createElement("div");
+    item.className = "search-result-item";
+    item.innerHTML = '<img src="' + r.thumbnail + '"><span>' + escapeHtml(r.title) + "</span>";
+    item.addEventListener("click", function () {
+      socket.emit("adminPlaySearchResult", r.videoId);
+      container.innerHTML = "";
+      document.getElementById("searchInput").value = "";
+    });
+    container.appendChild(item);
+  });
+  updateSearchCountLabel(data.searchCount);
+});
+
+function updateSearchCountLabel(count) {
+  var label = document.getElementById("searchCountLabel");
+  if (label && typeof count === "number") {
+    label.textContent = "(" + count + " searches today)";
+  }
+}
 
 document.getElementById("linkPlayBtn").addEventListener("click", function () {
   var input = document.getElementById("linkInput");
