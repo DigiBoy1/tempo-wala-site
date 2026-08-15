@@ -218,6 +218,7 @@ socket.on("adminLoginResult", function (res) {
   adminModal.hidden = true;
   document.getElementById("adminPanel").hidden = false;
   document.getElementById("adminTransport").hidden = false;
+  document.getElementById("searchWidget").hidden = false;
   document.getElementById("progressTrack").classList.add("admin-mode");
   activePlaylistKey = res.currentPlaylistKey;
   renderPlaylistButtons(res.playlists);
@@ -230,6 +231,7 @@ socket.on("adminDemoted", function () {
   isAdmin = false;
   document.getElementById("adminPanel").hidden = true;
   document.getElementById("adminTransport").hidden = true;
+  document.getElementById("searchWidget").hidden = true;
   document.getElementById("songListPanel").hidden = true;
   document.getElementById("progressTrack").classList.remove("admin-mode");
 });
@@ -276,7 +278,6 @@ document.getElementById("nextBtn").addEventListener("click", function () {
 
 // --- Search any song on YouTube (admin) — live search as you type ---
 var searchDebounceTimer = null;
-document.getElementById("searchBtn").addEventListener("click", runSearch);
 document.getElementById("searchInput").addEventListener("keydown", function (e) {
   if (e.key === "Enter") runSearch();
 });

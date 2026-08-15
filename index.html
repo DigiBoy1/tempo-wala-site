@@ -18,11 +18,25 @@
     <div class="bg-overlay"></div>
 
     <header class="topbar">
-      <div class="pill clock-pill">
-        <span class="pill-icon">🕐</span>
-        <div>
-          <div class="pill-main" id="clock">--:--</div>
-          <div class="pill-sub" id="dateLine">--</div>
+      <div class="left-stack">
+        <div class="pill clock-pill">
+          <span class="pill-icon">🕐</span>
+          <div>
+            <div class="pill-main" id="clock">--:--</div>
+            <div class="pill-sub" id="dateLine">--</div>
+          </div>
+        </div>
+
+        <!-- Quick search — only visible to admin, sits right under the clock -->
+        <div id="searchWidget" class="search-widget" hidden>
+          <div class="search-widget-header">
+            🔍 <span>Search a song</span>
+            <span id="searchCountLabel" class="search-count"></span>
+          </div>
+          <div class="search-widget-input-row">
+            <input type="text" id="searchInput" placeholder="Start typing…" />
+          </div>
+          <div id="searchResults" class="search-results"></div>
         </div>
       </div>
 
@@ -71,22 +85,12 @@
       </div>
     </div>
 
-    <!-- Admin control panel (only visible after login) -->
-    <div id="adminPanel" class="admin-panel" hidden>
-      <div class="admin-header">🎛 Admin Controls</div>
+      <div class="admin-panel" id="adminPanel" hidden>
+        <div class="admin-header">🎛 Admin Controls</div>
 
-      <div class="admin-section">
+        <div class="admin-section">
         <div class="admin-label">Playlists</div>
         <div id="playlistButtons" class="playlist-buttons"></div>
-      </div>
-
-      <div class="admin-section">
-        <div class="admin-label">Search any song on YouTube <span id="searchCountLabel"></span></div>
-        <div class="link-row">
-          <input type="text" id="searchInput" placeholder="Start typing a song name…" />
-          <button id="searchBtn">Search</button>
-        </div>
-        <div id="searchResults" class="search-results"></div>
       </div>
 
       <div class="admin-section">
