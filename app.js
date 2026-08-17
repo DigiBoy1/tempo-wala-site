@@ -1,6 +1,30 @@
 // app.js
 const BACKEND_URL = "https://tempo-wala.onrender.com";
 
+const BACKGROUND_VIDEOS = [
+  "bg1.mp4", "bg2.mp4", "bg3.mp4", "bg4.mp4", "bg5.mp4", 
+  "bg6.mp4", "bg7.mp4", "bg8.mp4", "bg9.mp4", "bg10.mp4"
+];
+var availableBackgrounds = [...BACKGROUND_VIDEOS];
+var currentPlayingVideoId = null;
+
+function changeBackgroundRandomly() {
+  if (availableBackgrounds.length === 0) {
+    availableBackgrounds = [...BACKGROUND_VIDEOS];
+  }
+  var randomIndex = Math.floor(Math.random() * availableBackgrounds.length);
+  var nextBg = availableBackgrounds.splice(randomIndex, 1)[0];
+  
+  var videoEl = document.querySelector(".bg-video");
+  if (videoEl) {
+    videoEl.src = nextBg;
+    var playPromise = videoEl.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(function(e) { console.log("Video autoplay blocked:", e); });
+    }
+  }
+}
+
 var socket = io(BACKEND_URL);
 var player = null;
 var pendingSync = null;
@@ -89,6 +113,11 @@ function updateNowPlaying(data) {
   var artistEl = document.getElementById("songArtist");
   var artEl = document.getElementById("albumArt");
   var upNextEl = document.getElementById("upNextLine");
+
+  if (data.videoId && data.videoId !== currentPlayingVideoId) {
+    currentPlayingVideoId = data.videoId;
+    changeBackgroundRandomly();
+  }
 
   if (titleEl) titleEl.textContent = split.song;
   if (artistEl) artistEl.textContent = split.artist;
