@@ -47,6 +47,8 @@ body {
 .topbar {
   width: 100%;
   display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
   justify-content: space-between;
   padding: 22px 26px;
   z-index: 2;
@@ -169,10 +171,13 @@ body {
 
 .hidden-player {
   position: absolute;
-  width: 1px;
-  height: 1px;
+  width: 250px;
+  height: 250px;
   overflow: hidden;
-  opacity: 0;
+  opacity: 0.01;
+  pointer-events: none;
+  z-index: -10;
+  bottom: 0;
 }
 
 /* ---- Bottom dock / player bar ---- */

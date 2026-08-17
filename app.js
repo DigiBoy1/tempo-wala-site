@@ -2,8 +2,15 @@
 const BACKEND_URL = "https://tempo-wala.onrender.com";
 
 const BACKGROUND_VIDEOS = [
-  "bg1.mp4", "bg2.mp4", "bg3.mp4", "bg4.mp4", "bg5.mp4", 
-  "bg6.mp4", "bg7.mp4", "bg8.mp4", "bg9.mp4"
+  "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+  "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+  "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+  "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+  "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+  "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
+  "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
+  "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
+  "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4"
 ];
 var availableBackgrounds = [...BACKGROUND_VIDEOS];
 var currentPlayingVideoId = null;
@@ -207,6 +214,11 @@ function updateNowPlaying(data) {
     document.title = data.title + " — Nitinsinghverse";
   }
 
+  if (typeof data.roomListeners !== 'undefined') {
+    var ruCount = document.getElementById("roomUserCount");
+    if (ruCount) ruCount.textContent = data.roomListeners;
+  }
+
   trackDuration = data.duration || 0;
   trackElapsedAtSync = data.elapsed || 0;
   syncReceivedAt = Date.now();
@@ -248,8 +260,8 @@ progressTrack.addEventListener("click", function (e) {
 // --- YouTube IFrame API setup ---
 window.onYouTubeIframeAPIReady = function () {
   player = new YT.Player("player", {
-    height: "1",
-    width: "1",
+    height: "250",
+    width: "250",
     videoId: "",
     playerVars: { autoplay: 0, controls: 0 },
     events: {
