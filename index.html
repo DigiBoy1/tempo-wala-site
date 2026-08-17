@@ -36,6 +36,20 @@
           </div>
         </div>
 
+        <!-- Room Widget -->
+        <div class="pill room-pill" style="flex-direction:column; align-items:flex-start;">
+          <div id="roomNotJoined" style="display:flex; gap:10px; align-items:center;">
+            <button id="createRoomBtn" style="padding: 4px 10px; border-radius:15px; border:none; background:rgba(255,255,255,0.2); color:#fff; cursor:pointer;">Create Room</button>
+            <input type="text" id="joinRoomInput" placeholder="Code" maxlength="6" style="width:50px; padding:4px; border-radius:5px; border:none; background:rgba(0,0,0,0.3); color:#fff;" />
+            <button id="joinRoomBtn" style="padding: 4px 10px; border-radius:15px; border:none; background:rgba(255,255,255,0.2); color:#fff; cursor:pointer;">Join</button>
+          </div>
+          <div id="roomJoined" hidden style="display:flex; gap:10px; align-items:center;">
+            <div class="pill-main">Room: <span id="currentRoomCodeLabel">Main</span></div>
+            <button id="leaveRoomBtn" style="padding: 4px 10px; border-radius:15px; border:none; background:rgba(255,100,100,0.5); color:#fff; cursor:pointer;">Leave Room</button>
+          </div>
+          <div id="roomErrorMsg" style="color:#ffaaaa; font-size:12px; margin-top:4px;" hidden></div>
+        </div>
+
         <!-- Quick search — only visible to admin, sits right under the clock -->
         <div id="searchWidget" class="search-widget" hidden>
           <div class="search-widget-header">

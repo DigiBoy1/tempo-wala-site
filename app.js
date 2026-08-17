@@ -3,7 +3,7 @@ const BACKEND_URL = "https://tempo-wala.onrender.com";
 
 const BACKGROUND_VIDEOS = [
   "bg1.mp4", "bg2.mp4", "bg3.mp4", "bg4.mp4", "bg5.mp4", 
-  "bg6.mp4", "bg7.mp4", "bg8.mp4", "bg9.mp4", "bg10.mp4"
+  "bg6.mp4", "bg7.mp4", "bg8.mp4", "bg9.mp4"
 ];
 var availableBackgrounds = [...BACKGROUND_VIDEOS];
 var currentPlayingVideoId = null;
@@ -34,6 +34,22 @@ var trackDuration = 0;
 var trackElapsedAtSync = 0;
 var syncReceivedAt = Date.now();
 
+// --- Network Latency Optimization ---
+var networkLatency = 0;
+function measureLatency() {
+  socket.emit("pingTime", Date.now());
+}
+socket.on("pongTime", function(data) {
+  var now = Date.now();
+  networkLatency = (now - data.clientTime) / 2;
+  // Schedule next ping in 30s
+  setTimeout(measureLatency, 30000);
+});
+// Start measuring on connect
+socket.on("connect", function() {
+  measureLatency();
+});
+
 // --- Clock + date ---
 function updateClock() {
   var now = new Date();
@@ -56,6 +72,59 @@ socket.on("adminStatus", function (data) {
   document.getElementById("requestBox").hidden = !data.online;
 });
 
+// --- Room Logic ---
+var currentRoomCode = "main";
+
+document.getElementById("createRoomBtn").addEventListener("click", function() {
+  socket.emit("createRoom");
+});
+document.getElementById("joinRoomBtn").addEventListener("click", function() {
+  var code = document.getElementById("joinRoomInput").value.trim();
+  if (code) {
+    socket.emit("joinRoom", code);
+  }
+});
+document.getElementById("leaveRoomBtn").addEventListener("click", function() {
+  socket.emit("leaveRoom");
+});
+
+socket.on("roomCreated", function(code) {
+  currentRoomCode = code;
+  showRoomJoinedUI(code);
+});
+
+socket.on("roomJoined", function(code) {
+  currentRoomCode = code;
+  if (code === "main") {
+    showRoomNotJoinedUI();
+  } else {
+    showRoomJoinedUI(code);
+  }
+  document.getElementById("roomErrorMsg").hidden = true;
+});
+
+socket.on("roomError", function(msg) {
+  var err = document.getElementById("roomErrorMsg");
+  err.textContent = msg;
+  err.hidden = false;
+});
+
+socket.on("roomDestroyed", function(msg) {
+  alert(msg);
+  socket.emit("leaveRoom");
+});
+
+function showRoomJoinedUI(code) {
+  document.getElementById("roomNotJoined").hidden = true;
+  document.getElementById("roomJoined").hidden = false;
+  document.getElementById("currentRoomCodeLabel").textContent = code;
+}
+
+function showRoomNotJoinedUI() {
+  document.getElementById("roomNotJoined").hidden = false;
+  document.getElementById("roomJoined").hidden = true;
+}
+
 socket.on("upNext", function (data) {
   var banner = document.getElementById("upNextBanner");
   banner.textContent = "🎵 Coming up: " + data.title;
@@ -67,6 +136,9 @@ socket.on("upNext", function (data) {
 
 // --- Sync events (which song is playing right now) ---
 socket.on("sync", function (data) {
+  // Apply latency compensation to elapsed time
+  data.elapsed += (networkLatency / 1000);
+  
   updateNowPlaying(data);
   if (!player || typeof player.loadVideoById !== "function") {
     pendingSync = data;
@@ -79,19 +151,23 @@ function applySync(data) {
   player.loadVideoById({ videoId: data.videoId, startSeconds: data.elapsed });
 }
 
-// Continuous drift-correction — no reload, just a quiet seek if this device
-// has fallen out of step with everyone else.
+// Continuous drift-correction
 socket.on("resync", function (data) {
   if (!player || typeof player.getCurrentTime !== "function") return;
   try {
     var current = player.getVideoData();
     if (!current || current.video_id !== data.videoId) return; // different song, ignore
-    trackElapsedAtSync = data.elapsed;
+    
+    // Apply latency compensation
+    var adjustedElapsed = data.elapsed + (networkLatency / 1000);
+    
+    trackElapsedAtSync = adjustedElapsed;
     syncReceivedAt = Date.now();
     var myTime = player.getCurrentTime();
-    var drift = Math.abs(myTime - data.elapsed);
-    if (drift > 0.6) {
-      player.seekTo(data.elapsed, true);
+    var drift = Math.abs(myTime - adjustedElapsed);
+    // tighter drift threshold for better sync (0.3s instead of 0.6s)
+    if (drift > 0.3) {
+      player.seekTo(adjustedElapsed, true);
     }
   } catch (e) {
     // player not ready yet — safe to ignore
@@ -255,7 +331,6 @@ socket.on("adminLoginResult", function (res) {
   updateSearchCountLabel(res.searchCount);
 });
 
-// If another device logs in as admin, this device gets demoted back to a normal listener
 socket.on("adminDemoted", function () {
   isAdmin = false;
   document.getElementById("adminPanel").hidden = true;
@@ -281,7 +356,6 @@ function renderPlaylistButtons(playlists) {
   });
 }
 
-// Server replies with the song list for whichever playlist admin tapped
 socket.on("playlistSongs", function (data) {
   var panel = document.getElementById("songListPanel");
   var list = document.getElementById("songListItems");
@@ -305,7 +379,6 @@ document.getElementById("nextBtn").addEventListener("click", function () {
   socket.emit("adminNext");
 });
 
-// --- Search any song on YouTube (admin) — live search as you type ---
 var searchDebounceTimer = null;
 document.getElementById("searchInput").addEventListener("keydown", function (e) {
   if (e.key === "Enter") runSearch();
@@ -357,7 +430,6 @@ document.getElementById("linkPlayBtn").addEventListener("click", function () {
   timeInput.value = "";
 });
 
-// Accepts "1:12" (mm:ss) or plain "72" (seconds), returns seconds
 function parseTimeToSeconds(text) {
   if (!text) return 0;
   if (text.indexOf(":") !== -1) {
@@ -369,7 +441,6 @@ function parseTimeToSeconds(text) {
   return parseInt(text, 10) || 0;
 }
 
-// --- Requests (admin side) ---
 function renderRequests(requests) {
   var list = document.getElementById("requestList");
   list.innerHTML = "";
@@ -396,7 +467,6 @@ socket.on("newRequest", function (entry) {
   addRequestToList(entry);
 });
 
-// --- Requests (everyone's send box) ---
 document.getElementById("requestSendBtn").addEventListener("click", sendRequest);
 document.getElementById("requestInput").addEventListener("keydown", function (e) {
   if (e.key === "Enter") sendRequest();
