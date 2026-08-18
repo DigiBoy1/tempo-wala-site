@@ -45,13 +45,14 @@ body {
 
 /* ---- Top bar: clock + status pills ---- */
 .topbar {
+  position: relative;
   width: 100%;
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
   justify-content: space-between;
   padding: 22px 26px;
-  z-index: 2;
+  z-index: 20;
 }
 
 .left-stack {
@@ -546,7 +547,7 @@ body {
 }
 
 @media (max-width: 480px) {
-  .admin-panel { right: 10px; left: 10px; width: auto; top: 100px; }
+  .admin-panel { right: 10px; left: 10px; width: auto; top: 140px; }
 }
 
 /* ---- Playlist song list panel (right side, admin) ---- */

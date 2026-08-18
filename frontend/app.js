@@ -2,7 +2,7 @@
 const BACKEND_URL = "https://tempo-wala.onrender.com";
 
 const BACKGROUND_VIDEOS = [
-  "bg4.mp4", "bg5.mp4", "bg7.mp4", "bg8.mp4", "bg3.mp4", "bg2.mp4"
+  "background.mp4", "bg3.mp4", "bg4.mp4", "bg5.mp4", "bg7.mp4", "bg9.mp4"
 ];
 var availableBackgrounds = [...BACKGROUND_VIDEOS];
 var currentPlayingVideoId = null;
@@ -68,7 +68,9 @@ socket.on("userCount", function (count) {
 // --- Admin online/offline badge + request box visibility ---
 socket.on("adminStatus", function (data) {
   document.getElementById("adminLiveBadge").hidden = !data.online;
-  document.getElementById("requestBox").hidden = !data.online;
+  if (!isAdmin) {
+    document.getElementById("requestBox").hidden = !data.online;
+  }
 });
 
 // --- Room Logic ---
@@ -328,6 +330,7 @@ socket.on("adminLoginResult", function (res) {
   document.getElementById("adminPanel").hidden = false;
   document.getElementById("adminTransport").hidden = false;
   document.getElementById("searchWidget").hidden = false;
+  document.getElementById("requestBox").hidden = true;
   document.getElementById("progressTrack").classList.add("admin-mode");
   activePlaylistKey = res.currentPlaylistKey;
   renderPlaylistButtons(res.playlists);
