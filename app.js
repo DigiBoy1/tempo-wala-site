@@ -175,8 +175,8 @@ socket.on("resync", function (data) {
     syncReceivedAt = Date.now();
     var myTime = player.getCurrentTime();
     var drift = Math.abs(myTime - adjustedElapsed);
-    // tighter drift threshold for better sync (0.3s instead of 0.6s)
-    if (drift > 0.3) {
+    // wider drift threshold (5s) for better continuous playback, as requested
+    if (drift > 5) {
       player.seekTo(adjustedElapsed, true);
     }
   } catch (e) {
