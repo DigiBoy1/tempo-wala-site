@@ -138,8 +138,10 @@ body {
   font-size: 14px; font-weight: 700; cursor: pointer;
   box-shadow: 0 8px 28px rgba(160,92,255,0.45); transition: transform 0.2s;
 }
-.join-btn.hidden { display: none; }
 .join-btn:hover { transform: scale(1.05); }
+
+/* Global Hidden Utility */
+.hidden { display: none !important; }
 
 /* 4. LIVE STATUS */
 .status-pill {
