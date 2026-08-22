@@ -871,3 +871,78 @@ body {
   /* Ensure entry center stack shift accounts for taller dock */
   .entry-center-stack.radio-active { padding-bottom: 150px; }
 }
+
+/* ---- SEO Footer (Visible) ---- */
+.seo-footer {
+  width: 100%;
+  max-width: 900px;
+  margin: 40px auto 0 auto;
+  padding: 40px 30px;
+  background: var(--glass);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-bottom: none;
+  border-radius: 24px 24px 0 0;
+  text-align: center;
+  z-index: 10;
+  position: relative;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.seo-footer.hidden {
+  display: none;
+}
+
+.seo-footer h2 {
+  font-family: 'Playfair Display', serif;
+  color: var(--gold);
+  font-size: 28px;
+  margin-bottom: 16px;
+  margin-top: 0;
+}
+
+.seo-footer > p {
+  font-size: 15px;
+  line-height: 1.6;
+  opacity: 0.9;
+  max-width: 600px;
+  margin: 0 auto 40px auto;
+}
+
+.seo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  text-align: left;
+}
+
+.seo-card {
+  background: rgba(0,0,0,0.3);
+  padding: 20px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.seo-card h3 {
+  color: var(--purple);
+  font-size: 16px;
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.seo-card p {
+  font-size: 13px;
+  line-height: 1.5;
+  opacity: 0.8;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .seo-footer {
+    padding: 30px 20px;
+    margin-top: 20px;
+  }
+  .seo-footer h2 {
+    font-size: 24px;
+  }
+}
