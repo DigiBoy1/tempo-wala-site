@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Mood Wala — Listen Together, Anywhere</title>
   <meta name="description" content="Listen to the same music with friends or someone special, wherever you are. Create a room, sync up and enjoy Mood Wala together." />
   <meta name="keywords" content="Mood Wala, moodwala, mood wala music, Mood Wala Radio, listen together, listen to music together, synchronized radio, online listening room, Bhojpuri Songs, Haryanvi Radio, Bhakti Songs" />
@@ -36,7 +36,7 @@
   </script>
 
   <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Dancing+Script:wght@700&family=Baloo+2:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Dancing+Script:wght@700&family=Baloo+2:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 </head>
 <body>
 
@@ -46,8 +46,11 @@
     <video class="bg-video" autoplay muted loop playsinline src="bg1.mp4"></video>
     <div class="bg-overlay"></div>
 
-    <header class="topbar">
-      <div class="left-stack">
+    <!-- MAIN RESPONSIVE LAYOUT -->
+    <div class="layout-grid">
+      
+      <!-- 1. CLOCK / DATE (Mobile: Top Left, Desktop: Top Center or hidden if not needed, but we keep it) -->
+      <div class="widget-clock">
         <div class="pill clock-pill">
           <span class="pill-icon">🕐</span>
           <div>
@@ -55,94 +58,159 @@
             <div class="pill-sub" id="dateLine">--</div>
           </div>
         </div>
+      </div>
 
-        <!-- Room Widget -->
+      <!-- 2. LIVE RADIO INDICATOR (Mobile: Top Right, Desktop: Status) -->
+      <div class="widget-live-indicator">
+        <div class="live-pill">
+          <span class="status-dot"></span>
+          <span class="online-text">LIVE RADIO</span>
+        </div>
+      </div>
+
+      <!-- 3. BRANDING & ENTRY -->
+      <div class="widget-brand entry-center-stack" id="entryCenterStack">
+        <div class="brandmark" id="brandLogo">
+          <svg class="brand-orbit" viewBox="0 0 100 40" width="120">
+            <path d="M20 30 A20 20 0 1 1 80 30" fill="none" stroke="currentColor" stroke-width="1.2"/>
+            <circle cx="20" cy="30" r="1.5" fill="currentColor"/>
+            <circle cx="80" cy="30" r="1.5" fill="currentColor"/>
+          </svg>
+          <div class="brand-name">Nitinsinghverse</div>
+        </div>
+
+        <main class="hero">
+          <h1 class="title">
+            <span class="sr-only">Mood Wala — Listen Together</span>
+            <span class="title-mood" aria-hidden="true">MOOD</span>
+            <span class="title-wala" aria-hidden="true">वाला</span>
+          </h1>
+          <p class="tagline">Same song. Same moment. Together. ❤️</p>
+        </main>
+
+        <div id="entryControls" class="entry-controls">
+          <button id="joinBtn" class="join-btn" aria-label="Tap to join the live radio">
+            TAP TO JOIN
+          </button>
+        </div>
+      </div>
+
+      <!-- 4. LIVE STATUS -->
+      <div class="widget-status">
+        <div class="pill status-pill">
+          <div class="status-pill-grid">
+            <div class="status-col">
+              <div class="status-icon">👥</div>
+              <div class="status-val" id="userCount">–</div>
+              <div class="status-label">GLOBAL LISTENERS</div>
+              <div class="status-sub">Listening worldwide</div>
+            </div>
+            <div class="status-col">
+              <div class="status-icon">👥</div>
+              <div class="status-val" id="roomUserCount">–</div>
+              <div class="status-label">IN THIS ROOM</div>
+              <div class="status-sub">With you right now</div>
+            </div>
+            <div class="status-col admin-col">
+              <div class="status-icon">🎧</div>
+              <div class="status-val">ADMIN</div>
+              <div class="status-label admin-live-badge" id="adminLiveBadge" hidden>LIVE</div>
+              <div class="status-sub">Admin is Live</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. ROOM CONTROLS -->
+      <div class="widget-room">
         <div class="pill room-pill">
           <div class="room-pill-header">
-            <span class="pill-icon">👥</span>
-            <div class="room-pill-title">Listen Together</div>
+            <span class="pill-icon">🏠</span>
+            <div class="room-pill-title">ROOM CONTROLS</div>
           </div>
           
           <div id="roomNotJoined" class="room-not-joined">
             <p class="room-invite-text">Invite your people. Same song, same moment.</p>
-            <div class="room-actions">
-              <button id="createRoomBtn" aria-label="Create a room" class="room-btn create-btn">Create Room</button>
-              <div class="join-group">
-                <input type="text" id="joinRoomInput" aria-label="Enter room code" placeholder="Code" maxlength="6" class="room-input" />
-                <button id="joinRoomBtn" aria-label="Join room" class="room-btn join-btn-small">Join</button>
+            <div class="room-actions-cards">
+              <button id="createRoomBtn" aria-label="Create a room" class="room-card create-card">
+                <span class="card-icon">👥</span>
+                <span class="card-title">Create Room</span>
+                <span class="card-sub">Make a room & invite friends</span>
+              </button>
+              <div class="room-card join-card">
+                <span class="card-icon">🔗</span>
+                <span class="card-title">Join Room</span>
+                <span class="card-sub">Enter a code & join instantly</span>
+                <div class="join-inputs">
+                  <input type="text" id="joinRoomInput" aria-label="Enter room code" placeholder="# Code" maxlength="6" class="room-input" />
+                  <button id="joinRoomBtn" aria-label="Join room" class="join-btn-small">Join</button>
+                </div>
               </div>
             </div>
           </div>
           
           <div id="roomJoined" class="room-joined" hidden>
             <div class="room-active-info">
-              <span class="room-label">Current Room:</span>
-              <span id="currentRoomCodeLabel" class="room-code-badge">Main</span>
+              <span class="room-label">🏠 ROOM:</span>
+              <span id="currentRoomCodeLabel" class="room-code-badge">MAIN</span>
             </div>
             <button id="leaveRoomBtn" aria-label="Leave room" class="room-btn leave-btn">Leave Room</button>
           </div>
           <div id="roomErrorMsg" class="room-error" hidden></div>
         </div>
+      </div>
 
-        <!-- Quick search — only visible to admin, sits right under the clock -->
-        <div id="searchWidget" class="search-widget" hidden>
-          <div class="search-widget-header">
-            🔍 <span>Search a song</span>
-            <span id="searchCountLabel" class="search-count"></span>
+      <!-- 6. ADMIN CONTROLS (Including Playlists) -->
+      <div class="widget-admin admin-panel" id="adminPanel" hidden>
+        <div class="admin-header">🎛 Admin Controls</div>
+
+        <div class="admin-section">
+          <div class="admin-label">🎵 PLAYLISTS</div>
+          <div id="playlistButtons" class="playlist-buttons"></div>
+        </div>
+
+        <div class="admin-section">
+          <div class="admin-label">PLAY A LINK</div>
+          <div class="link-row">
+            <input type="text" id="linkInput" placeholder="Paste YouTube / YT Music link here..." />
+            <button id="linkPlayBtn">Play</button>
           </div>
-          <div class="search-widget-input-row">
-            <input type="text" id="searchInput" aria-label="Search for a song" placeholder="Start typing…" />
-          </div>
-          <div id="searchResults" class="search-results"></div>
+        </div>
+
+        <div class="admin-section">
+          <div class="admin-label">REQUESTS <span id="requestCount"></span></div>
+          <div id="requestList" class="request-list"></div>
         </div>
       </div>
 
-      <div class="pill status-pill">
-        <div class="status-pill-grid">
-          <div class="status-left">
-            <div class="status-header">
-              <span class="status-dot"></span>
-              <span class="online-text">ONLINE</span>
-            </div>
-            <div class="pill-sub"><span id="userCount">–</span> listening globally</div>
-          </div>
-          <div class="status-right">
-            <div class="pill-sub room-stat"><span id="roomUserCount">–</span> in this room</div>
-            <div class="pill-sub admin-live-badge" id="adminLiveBadge" hidden>🎧 Admin is Live</div>
-          </div>
+      <!-- 7. SONG REQUEST (Visible to everyone) -->
+      <div class="widget-request request-box" id="requestBox" hidden>
+        <div class="request-inner">
+          <span class="req-icon">🎵</span>
+          <input type="text" id="requestInput" aria-label="Request a song" placeholder="Request a song…" maxlength="200" />
+          <button id="requestSendBtn" aria-label="Send song request">Send</button>
         </div>
       </div>
-    </header>
 
-    <div class="entry-center-stack" id="entryCenterStack">
-      <div class="brandmark" id="brandLogo">
-        <svg class="brand-orbit" viewBox="0 0 100 40" width="120">
-          <path d="M20 30 A20 20 0 1 1 80 30" fill="none" stroke="currentColor" stroke-width="1.2"/>
-          <circle cx="20" cy="30" r="1.5" fill="currentColor"/>
-          <circle cx="80" cy="30" r="1.5" fill="currentColor"/>
-        </svg>
-        <div class="brand-name">Nitinsinghverse</div>
-      </div>
-
-      <main class="hero">
-        <h1 class="title">
-          <span class="sr-only">Mood Wala — Listen Together</span>
-          <span class="title-mood" aria-hidden="true">MOOD</span>
-          <span class="title-wala" aria-hidden="true">वाला</span>
-        </h1>
-        <p class="tagline">Listen Together. Anywhere.</p>
-      </main>
-
-      <div id="entryControls" class="entry-controls">
-        <p class="entry-message">Same song. Same moment. Together.</p>
-        <button id="joinBtn" class="join-btn" aria-label="Tap to join the live radio">
-          TAP TO JOIN
-        </button>
-        <div class="entry-live-status">
-          <span class="pulse"></span> LIVE
+      <!-- SEARCH (Admin only) -->
+      <div id="searchWidget" class="search-widget widget-search" hidden>
+        <div class="search-widget-header">
+          🔍 <span>Search a song</span>
+          <span id="searchCountLabel" class="search-count"></span>
         </div>
+        <div class="search-widget-input-row">
+          <input type="text" id="searchInput" aria-label="Search for a song" placeholder="Start typing…" />
+        </div>
+        <div id="searchResults" class="search-results"></div>
       </div>
-    </div>
+
+      <!-- SONG LIST PANEL (Admin only) -->
+      <div id="songListPanel" class="song-list-panel widget-songlist" hidden>
+        <div class="panel-title">Tap a song to play it</div>
+        <div id="songListItems"></div>
+      </div>
+
+    </div> <!-- End Layout Grid -->
 
     <div id="player" class="hidden-player"></div>
 
@@ -159,35 +227,6 @@
       </div>
     </div>
 
-      <div class="admin-panel" id="adminPanel" hidden>
-        <div class="admin-header">🎛 Admin Controls</div>
-
-        <div class="admin-section">
-        <div class="admin-label">Playlists</div>
-        <div id="playlistButtons" class="playlist-buttons"></div>
-      </div>
-
-      <div class="admin-section">
-        <div class="admin-label">Play a link (then auto-returns to playlist)</div>
-        <div class="link-row">
-          <input type="text" id="linkInput" placeholder="Paste YouTube / YT Music link" />
-          <input type="text" id="startTimeInput" placeholder="1:12" class="start-time-input" />
-          <button id="linkPlayBtn">Play</button>
-        </div>
-      </div>
-
-      <div class="admin-section">
-        <div class="admin-label">Requests <span id="requestCount"></span></div>
-        <div id="requestList" class="request-list"></div>
-      </div>
-    </div>
-
-    <!-- Song list for the playlist admin is browsing -->
-    <div id="songListPanel" class="song-list-panel" hidden>
-      <div class="panel-title">Tap a song to play it</div>
-      <div id="songListItems"></div>
-    </div>
-
     <!-- Admin transport controls -->
     <div id="adminTransport" class="admin-transport" hidden>
       <button id="prevBtn" aria-label="Previous song">⏮</button>
@@ -197,35 +236,29 @@
     <!-- "Coming up next" banner shown to everyone during the 10s buffer -->
     <div id="upNextBanner" class="up-next-banner" hidden></div>
 
-    <!-- Song request box (visible to everyone, only usable while admin is online) -->
-    <div id="requestBox" class="request-box" hidden>
-      <input type="text" id="requestInput" aria-label="Request a song" placeholder="Request a song…" maxlength="200" />
-      <button id="requestSendBtn" aria-label="Send song request">Send</button>
-    </div>
-
     <footer class="dock" id="dock" hidden>
       <div class="progress-track" id="progressTrack">
         <div class="progress-fill" id="progressFill"></div>
       </div>
       <div class="dock-row">
-      <div class="dock-left">
-        <img id="albumArt" class="album-art" src="" alt="Album Artwork">
-        <div class="dock-info">
-          <div class="dock-label">NOW PLAYING</div>
-          <div class="dock-title" id="songTitle">—</div>
-          <div class="dock-artist" id="songArtist">—</div>
-          <div class="up-next-line" id="upNextLine"></div>
+        <div class="dock-left">
+          <img id="albumArt" class="album-art" src="" alt="Album Artwork">
+          <div class="dock-info">
+            <div class="dock-label">NOW PLAYING</div>
+            <div class="dock-title" id="songTitle">—</div>
+            <div class="dock-artist" id="songArtist">—</div>
+            <div class="up-next-line" id="upNextLine"></div>
+          </div>
         </div>
-      </div>
 
-      <div class="dock-right">
-        <span class="progress-time" id="progressTime">0:00 / 0:00</span>
-        <div class="volume-control">
-          <span class="vol-icon" aria-hidden="true">🔊</span>
-          <input type="range" id="volumeSlider" aria-label="Volume control" min="0" max="100" value="80" />
+        <div class="dock-right">
+          <span class="progress-time" id="progressTime">0:00 / 0:00</span>
+          <div class="volume-control">
+            <span class="vol-icon" aria-hidden="true">🔊</span>
+            <input type="range" id="volumeSlider" aria-label="Volume control" min="0" max="100" value="80" />
+          </div>
+          <div class="live-tag"><span class="pulse"></span> LIVE</div>
         </div>
-        <div class="live-tag"><span class="pulse"></span> LIVE</div>
-      </div>
       </div>
     </footer>
   </div>

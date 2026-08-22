@@ -433,10 +433,11 @@ document.getElementById("linkPlayBtn").addEventListener("click", function () {
   var input = document.getElementById("linkInput");
   var timeInput = document.getElementById("startTimeInput");
   if (!input.value.trim()) return;
-  var startSeconds = parseTimeToSeconds(timeInput.value.trim());
+  var startText = timeInput ? timeInput.value.trim() : "";
+  var startSeconds = parseTimeToSeconds(startText);
   socket.emit("adminPlayLink", { url: input.value.trim(), startSeconds: startSeconds });
   input.value = "";
-  timeInput.value = "";
+  if (timeInput) timeInput.value = "";
 });
 
 function parseTimeToSeconds(text) {
