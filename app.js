@@ -279,7 +279,8 @@ document.getElementById("joinBtn").addEventListener("click", function () {
   if (player && typeof player.playVideo === "function") {
     player.playVideo();
   }
-  document.getElementById("joinBtn").classList.add("hidden");
+  document.getElementById("entryControls").classList.add("hidden");
+  document.getElementById("entryCenterStack").classList.add("radio-active");
   document.getElementById("dock").hidden = false;
 });
 

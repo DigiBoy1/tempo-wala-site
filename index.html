@@ -94,32 +94,41 @@
       </div>
     </header>
 
-    <div class="brandmark" id="brandLogo">
-      <svg class="brand-orbit" viewBox="0 0 100 40" width="120">
-        <path d="M20 30 A20 20 0 1 1 80 30" fill="none" stroke="currentColor" stroke-width="1.2"/>
-        <circle cx="20" cy="30" r="1.5" fill="currentColor"/>
-        <circle cx="80" cy="30" r="1.5" fill="currentColor"/>
-      </svg>
-      <div class="brand-name">Nitinsinghverse</div>
+    <div class="entry-center-stack" id="entryCenterStack">
+      <div class="brandmark" id="brandLogo">
+        <svg class="brand-orbit" viewBox="0 0 100 40" width="120">
+          <path d="M20 30 A20 20 0 1 1 80 30" fill="none" stroke="currentColor" stroke-width="1.2"/>
+          <circle cx="20" cy="30" r="1.5" fill="currentColor"/>
+          <circle cx="80" cy="30" r="1.5" fill="currentColor"/>
+        </svg>
+        <div class="brand-name">Nitinsinghverse</div>
+      </div>
+
+      <main class="hero">
+        <h1 class="title">
+          <span class="sr-only">Mood Wala</span>
+          <span class="title-mood" aria-hidden="true">MOOD</span>
+          <span class="title-wala" aria-hidden="true">वाला</span>
+        </h1>
+        <p class="tagline">Live Radio • Listen Together</p>
+        
+        <section class="seo-intro sr-only">
+          <h2>About Mood Wala Radio</h2>
+          <p>Welcome to <strong>Mood Wala Radio</strong>, your ultimate destination for live music. We stream non-stop mood-based music carefully curated to match your vibe.</p>
+          <p>Whether you're looking for upbeat Bhojpuri songs, energetic Haryanvi songs, or peaceful Bhakti songs, tune in to our live radio and let the Mood Wala music take over.</p>
+        </section>
+      </main>
+
+      <div id="entryControls" class="entry-controls">
+        <p class="entry-message">You're about to enter the live broadcast.</p>
+        <button id="joinBtn" class="join-btn" aria-label="Tap to join the live radio">
+          TAP TO JOIN
+        </button>
+        <div class="entry-live-status">
+          <span class="pulse"></span> LIVE
+        </div>
+      </div>
     </div>
-
-    <main class="hero">
-      <h1 class="title">
-        <span style="position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0;">Mood Wala</span>
-        <span class="title-mood" aria-hidden="true">MOOD</span>
-        <span class="title-wala" aria-hidden="true">वाला</span>
-      </h1>
-      <div class="live-badge">📻 LIVE RADIO</div>
-      <p class="tagline">Feel the vibes. Live the mood.</p>
-      
-      <section class="seo-intro" style="font-size: 0.9rem; opacity: 0.85; max-width: 600px; margin: 15px auto; padding: 0 15px; line-height: 1.5; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); font-family: 'Inter', sans-serif;">
-        <h2 style="position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0;">About Mood Wala Radio</h2>
-        <p style="margin-bottom: 8px;">Welcome to <strong>Mood Wala Radio</strong>, your ultimate destination for live music. We stream non-stop mood-based music carefully curated to match your vibe.</p>
-        <p style="margin: 0;">Whether you're looking for upbeat Bhojpuri songs, energetic Haryanvi songs, or peaceful Bhakti songs, tune in to our live radio and let the Mood Wala music take over.</p>
-      </section>
-    </main>
-
-    <button id="joinBtn" class="join-btn" aria-label="Tap to join the live radio">🎵 Tap to join the radio</button>
 
     <div id="player" class="hidden-player"></div>
 
