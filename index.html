@@ -150,11 +150,17 @@
           </div>
           
           <div id="roomJoined" class="room-joined" hidden>
-            <div class="room-active-info">
-              <span class="room-label">🏠 ROOM:</span>
-              <span id="currentRoomCodeLabel" class="room-code-badge">MAIN</span>
+            <div class="room-joined-card">
+              <div class="room-joined-header">🎧 LISTENING ROOM</div>
+              <div class="room-joined-info">
+                <span class="room-label">ROOM CODE:</span>
+                <span id="currentRoomCodeLabel" class="room-code-badge">MAIN</span>
+              </div>
+              <div class="room-joined-actions">
+                <button id="copyRoomBtn" aria-label="Copy Room Code" class="room-btn copy-btn">Copy Code</button>
+                <button id="leaveRoomBtn" aria-label="Leave room" class="room-btn leave-btn">Leave Room</button>
+              </div>
             </div>
-            <button id="leaveRoomBtn" aria-label="Leave room" class="room-btn leave-btn">Leave Room</button>
           </div>
           <div id="roomErrorMsg" class="room-error" hidden></div>
         </div>

@@ -87,6 +87,17 @@ document.getElementById("leaveRoomBtn").addEventListener("click", function() {
   socket.emit("leaveRoom");
 });
 
+document.getElementById("copyRoomBtn").addEventListener("click", function() {
+  var btn = this;
+  if (navigator.clipboard && currentRoomCode && currentRoomCode !== "main") {
+    navigator.clipboard.writeText(currentRoomCode).then(function() {
+      var originalText = btn.textContent;
+      btn.textContent = "Copied!";
+      setTimeout(function() { btn.textContent = originalText; }, 2000);
+    });
+  }
+});
+
 socket.on("roomCreated", function(code) {
   currentRoomCode = code;
   showRoomJoinedUI(code);
