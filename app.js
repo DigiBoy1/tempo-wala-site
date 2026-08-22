@@ -161,6 +161,8 @@ function applySync(data) {
   player.loadVideoById({ videoId: data.videoId, startSeconds: data.elapsed });
 }
 
+var lastSyncCorrection = 0;
+
 // Continuous drift-correction
 socket.on("resync", function (data) {
   if (!player || typeof player.getCurrentTime !== "function") return;
@@ -173,11 +175,18 @@ socket.on("resync", function (data) {
     
     trackElapsedAtSync = adjustedElapsed;
     syncReceivedAt = Date.now();
+    
+    // Only attempt to correct drift every 5 seconds
+    var now = Date.now();
+    if (now - lastSyncCorrection < 5000) return; 
+
     var myTime = player.getCurrentTime();
     var drift = Math.abs(myTime - adjustedElapsed);
-    // wider drift threshold (5s) for better continuous playback, as requested
-    if (drift > 5) {
+    
+    // Tight drift threshold (0.3s) for near-zero latency
+    if (drift > 0.3) {
       player.seekTo(adjustedElapsed, true);
+      lastSyncCorrection = now;
     }
   } catch (e) {
     // player not ready yet — safe to ignore
