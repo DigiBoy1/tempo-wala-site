@@ -3,24 +3,24 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mood Wala - Suno Apne Mood Ka Music</title>
-  <meta name="description" content="Listen to Mood Wala for free live internet radio, Bhojpuri, Haryanvi, and Bhakti songs. Enjoy non-stop music tailored to your mood." />
-  <meta name="keywords" content="Mood Wala, moodwala, mood wala music, Mood Wala Radio, Free Live Radio, Bhojpuri Songs, Haryanvi Radio, Bhakti Songs" />
+  <title>Mood Wala — Listen Together, Anywhere</title>
+  <meta name="description" content="Listen to the same music with friends or someone special, wherever you are. Create a room, sync up and enjoy Mood Wala together." />
+  <meta name="keywords" content="Mood Wala, moodwala, mood wala music, Mood Wala Radio, listen together, listen to music together, synchronized radio, online listening room, Bhojpuri Songs, Haryanvi Radio, Bhakti Songs" />
   <meta name="google-site-verification" content="yX_HTWRQYJUQKmtvSpyX36iVTbeF68azsgVPuS4m5Yk" />
   <link rel="canonical" href="https://mood-wala.vercel.app/" />
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://mood-wala.vercel.app/" />
-  <meta property="og:title" content="Mood Wala - Suno Apne Mood Ka Music" />
-  <meta property="og:description" content="Listen to Mood Wala for free live internet radio, Bhojpuri, Haryanvi, and Bhakti songs. Enjoy non-stop music tailored to your mood." />
+  <meta property="og:title" content="Mood Wala — Listen Together, Anywhere" />
+  <meta property="og:description" content="Listen to the same music with friends or someone special, wherever you are. Create a room, sync up and enjoy Mood Wala together." />
   <meta property="og:site_name" content="Mood Wala" />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:url" content="https://mood-wala.vercel.app/" />
-  <meta name="twitter:title" content="Mood Wala - Suno Apne Mood Ka Music" />
-  <meta name="twitter:description" content="Listen to Mood Wala for free live internet radio, Bhojpuri, Haryanvi, and Bhakti songs. Enjoy non-stop music tailored to your mood." />
+  <meta name="twitter:title" content="Mood Wala — Listen Together, Anywhere" />
+  <meta name="twitter:description" content="Listen to the same music with friends or someone special, wherever you are. Create a room, sync up and enjoy Mood Wala together." />
 
   <!-- Structured Data (JSON-LD) -->
   <script type="application/ld+json">
@@ -29,7 +29,7 @@
     "@type": ["WebSite", "RadioStation"],
     "name": "Mood Wala",
     "url": "https://mood-wala.vercel.app/",
-    "description": "Listen to Mood Wala for free live internet radio, Bhojpuri, Haryanvi, and Bhakti songs.",
+    "description": "Listen to the same music with friends or someone special, wherever you are. Create a room, sync up and enjoy Mood Wala together.",
     "genre": "World Music, Regional",
     "inLanguage": ["en", "hi"]
   }
@@ -57,17 +57,31 @@
         </div>
 
         <!-- Room Widget -->
-        <div class="pill room-pill" style="flex-direction:column; align-items:flex-start;">
-          <div id="roomNotJoined" style="display:flex; gap:10px; align-items:center;">
-            <button id="createRoomBtn" aria-label="Create a room" style="padding: 4px 10px; border-radius:15px; border:none; background:rgba(255,255,255,0.2); color:#fff; cursor:pointer;">Create Room</button>
-            <input type="text" id="joinRoomInput" aria-label="Enter room code" placeholder="Code" maxlength="6" style="width:50px; padding:4px; border-radius:5px; border:none; background:rgba(0,0,0,0.3); color:#fff;" />
-            <button id="joinRoomBtn" aria-label="Join room" style="padding: 4px 10px; border-radius:15px; border:none; background:rgba(255,255,255,0.2); color:#fff; cursor:pointer;">Join</button>
+        <div class="pill room-pill">
+          <div class="room-pill-header">
+            <span class="pill-icon">👥</span>
+            <div class="room-pill-title">Listen Together</div>
           </div>
-          <div id="roomJoined" hidden style="display:flex; gap:10px; align-items:center;">
-            <div class="pill-main">Room: <span id="currentRoomCodeLabel">Main</span></div>
-            <button id="leaveRoomBtn" aria-label="Leave room" style="padding: 4px 10px; border-radius:15px; border:none; background:rgba(255,100,100,0.5); color:#fff; cursor:pointer;">Leave Room</button>
+          
+          <div id="roomNotJoined" class="room-not-joined">
+            <p class="room-invite-text">Invite your people. Same song, same moment.</p>
+            <div class="room-actions">
+              <button id="createRoomBtn" aria-label="Create a room" class="room-btn create-btn">Create Room</button>
+              <div class="join-group">
+                <input type="text" id="joinRoomInput" aria-label="Enter room code" placeholder="Code" maxlength="6" class="room-input" />
+                <button id="joinRoomBtn" aria-label="Join room" class="room-btn join-btn-small">Join</button>
+              </div>
+            </div>
           </div>
-          <div id="roomErrorMsg" style="color:#ffaaaa; font-size:12px; margin-top:4px;" hidden></div>
+          
+          <div id="roomJoined" class="room-joined" hidden>
+            <div class="room-active-info">
+              <span class="room-label">Current Room:</span>
+              <span id="currentRoomCodeLabel" class="room-code-badge">Main</span>
+            </div>
+            <button id="leaveRoomBtn" aria-label="Leave room" class="room-btn leave-btn">Leave Room</button>
+          </div>
+          <div id="roomErrorMsg" class="room-error" hidden></div>
         </div>
 
         <!-- Quick search — only visible to admin, sits right under the clock -->
@@ -84,12 +98,18 @@
       </div>
 
       <div class="pill status-pill">
-        <span class="status-dot"></span>
-        <div>
-          <div class="pill-main online-text">ONLINE</div>
-          <div class="pill-sub"><span id="userCount">–</span> total global listeners</div>
-          <div class="pill-sub" style="color:var(--gold)"><span id="roomUserCount">–</span> in this room</div>
-          <div class="pill-sub admin-live-badge" id="adminLiveBadge" hidden>🎧 Admin is Live</div>
+        <div class="status-pill-grid">
+          <div class="status-left">
+            <div class="status-header">
+              <span class="status-dot"></span>
+              <span class="online-text">ONLINE</span>
+            </div>
+            <div class="pill-sub"><span id="userCount">–</span> listening globally</div>
+          </div>
+          <div class="status-right">
+            <div class="pill-sub room-stat"><span id="roomUserCount">–</span> in this room</div>
+            <div class="pill-sub admin-live-badge" id="adminLiveBadge" hidden>🎧 Admin is Live</div>
+          </div>
         </div>
       </div>
     </header>
@@ -110,17 +130,17 @@
           <span class="title-mood" aria-hidden="true">MOOD</span>
           <span class="title-wala" aria-hidden="true">वाला</span>
         </h1>
-        <p class="tagline">Live Radio • Listen Together</p>
+        <p class="tagline">Listen Together. Anywhere.</p>
         
         <section class="seo-intro sr-only">
           <h2>About Mood Wala Radio</h2>
-          <p>Welcome to <strong>Mood Wala Radio</strong>, your ultimate destination for live music. We stream non-stop mood-based music carefully curated to match your vibe.</p>
-          <p>Whether you're looking for upbeat Bhojpuri songs, energetic Haryanvi songs, or peaceful Bhakti songs, tune in to our live radio and let the Mood Wala music take over.</p>
+          <p>Welcome to <strong>Mood Wala Radio</strong>, your ultimate destination for live music. We stream non-stop mood-based music carefully curated to match your vibe. Listen with your partner or friends in synchronized rooms.</p>
+          <p>Whether you're looking for upbeat Bhojpuri songs, energetic Haryanvi songs, or peaceful Bhakti songs, tune in to our live radio, create an online listening room, and let the Mood Wala music take over.</p>
         </section>
       </main>
 
       <div id="entryControls" class="entry-controls">
-        <p class="entry-message">You're about to enter the live broadcast.</p>
+        <p class="entry-message">Same song. Same moment. Together.</p>
         <button id="joinBtn" class="join-btn" aria-label="Tap to join the live radio">
           TAP TO JOIN
         </button>
